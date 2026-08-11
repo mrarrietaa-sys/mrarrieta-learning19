@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>The Alphabet | mrarrieta.com</title>
+<style>
+  :root{
+    --blue-900:#0B3B76;
+    --blue-700:#0F5FCE;
+    --blue-600:#1C71E0;
+    --blue-100:#E7F0FD;
+    --blue-050:#F4F8FE;
+    --white:#FFFFFF;
+    --ink:#12213B;
+    --ink-soft:#5A6B8C;
+    --green:#1E8E5A;
+    --green-bg:#E7F7EF;
+    --red:#D64545;
+    --red-bg:#FDECEC;
+    --radius-lg:20px;
+    --radius-md:14px;
+    --shadow:0 12px 30px -14px rgba(15,95,206,0.28);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(1100px 500px at 12% -10%, var(--blue-050), transparent 60%),
+      radial-gradient(900px 500px at 110% 8%, var(--blue-100), transparent 55%),
+      var(--white);
+    font-family:"Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color:var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  /* ---------- Header ---------- */
+  .app-header{
+    width:100%;
+    max-width:760px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:28px 20px 8px;
+  }
+
+  .brand{
+    font-size:21px;
+    font-weight:800;
+    letter-spacing:.01em;
+    color:var(--blue-900);
+  }
+
+  .activity-name{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+  }
+
+  /* ---------- Layout ---------- */
+  main{
+    width:100%;
+    max-width:760px;
+    padding:10px 20px 60px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ---------- Progress ---------- */
+  .progress-wrap{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin:14px 0 26px;
+  }
+
+  .progress-track{
+    flex:1;
+    height:10px;
+    background:var(--blue-100);
+    border-radius:999px;
+    overflow:hidden;
+  }
+
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--blue-600), var(--blue-900));
+    border-radius:999px;
+    transition:width .35s ease;
+  }
+
+  .progress-label{
+    font-size:14px;
+    font-weight:700;
+    color:var(--blue-700);
+    white-space:nowrap;
+  }
+
+  /* ---------- Screens ---------- */
+  .screen{
+    display:none;
+    flex-direction:column;
+    flex:1;
+  }
+  .screen.active{display:flex;}
+
+  /* ---------- Question card ---------- */
+  .question-card{
+    background:var(--white);
+    border:1px solid var(--blue-100);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    padding:34px 30px;
+    text-align:center;
+    margin-bottom:26px;
+  }
+
+  .question-eyebrow{
+    display:inline-block;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--blue-700);
+    background:var(--blue-100);
+    padding:6px 14px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+
+  .question-prompt{
+    font-size:22px;
+    font-weight:700;
+    color:var(--ink);
+    line-height:1.4;
+    margin:0;
+  }
+
+  /* ---------- Options: alphabet blocks ---------- */
+  .options-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+  }
+
+  .option-btn{
+    appearance:none;
+    border:2px solid var(--blue-100);
+    background:var(--white);
+    border-radius:var(--radius-md);
+    padding:18px 10px;
+    font-size:30px;
+    font-weight:800;
+    font-family:"Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color:var(--blue-900);
+    cursor:pointer;
+    text-align:center;
+    transition:border-color .15s ease, transform .1s ease, background .15s ease;
+    aspect-ratio:1/1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 6px 16px -10px rgba(15,95,206,0.3);
+  }
+
+  .option-btn:hover:not(:disabled){
+    border-color:var(--blue-600);
+    background:var(--blue-050);
+    transform:translateY(-2px);
+  }
+
+  .option-btn:active:not(:disabled){
+    transform:translateY(0);
+  }
+
+  .option-btn:focus-visible{
+    outline:3px solid var(--blue-600);
+    outline-offset:2px;
+  }
+
+  .option-btn:disabled{
+    cursor:default;
+  }
+
+  .option-btn.correct{
+    border-color:var(--green);
+    background:var(--green-bg);
+    color:var(--green);
+  }
+
+  .option-btn.incorrect{
+    border-color:var(--red);
+    background:var(--red-bg);
+    color:var(--red);
+  }
+
+  .option-btn.reveal-correct{
+    border-color:var(--green);
+    background:var(--green-bg);
+    color:var(--green);
+  }
+
+  /* ---------- Feedback ---------- */
+  .feedback-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-top:22px;
+    padding:16px 20px;
+    border-radius:var(--radius-md);
+    font-weight:700;
+    font-size:16px;
+    visibility:hidden;
+    opacity:0;
+    transition:opacity .2s ease;
+  }
+
+  .feedback-bar.show{
+    visibility:visible;
+    opacity:1;
+  }
+
+  .feedback-bar.correct{
+    background:var(--green-bg);
+    color:var(--green);
+  }
+
+  .feedback-bar.incorrect{
+    background:var(--red-bg);
+    color:var(--red);
+  }
+
+  .next-btn{
+    appearance:none;
+    border:none;
+    background:var(--blue-700);
+    color:var(--white);
+    font-weight:800;
+    font-size:15px;
+    padding:12px 22px;
+    border-radius:999px;
+    cursor:pointer;
+    letter-spacing:.02em;
+    transition:background .15s ease, transform .1s ease;
+    flex:0 0 auto;
+  }
+
+  .next-btn:hover{background:var(--blue-900);}
+  .next-btn:active{transform:scale(.97);}
+  .next-btn:focus-visible{outline:3px solid var(--blue-900); outline-offset:2px;}
+
+  /* ---------- Final screen ---------- */
+  #final-screen{
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
+
+  .try-again-btn{
+    appearance:none;
+    border:none;
+    background:linear-gradient(135deg, var(--blue-600), var(--blue-900));
+    color:var(--white);
+    font-weight:800;
+    font-size:22px;
+    letter-spacing:.06em;
+    padding:26px 56px;
+    border-radius:999px;
+    cursor:pointer;
+    box-shadow:0 16px 34px -12px rgba(11,59,118,.45);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+
+  .try-again-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 20px 40px -12px rgba(11,59,118,.5);
+  }
+
+  .try-again-btn:active{
+    transform:translateY(0);
+  }
+
+  .try-again-btn:focus-visible{
+    outline:3px solid var(--blue-900);
+    outline-offset:4px;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:560px){
+    .options-grid{grid-template-columns:repeat(2, 1fr);}
+    .question-prompt{font-size:19px;}
+    .question-card{padding:26px 20px;}
+    .feedback-bar{flex-direction:column; align-items:stretch; text-align:center;}
+    .try-again-btn{font-size:18px; padding:20px 40px;}
+    .option-btn{font-size:26px;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- Espacio reservado: si se necesita el logo oficial de mrarrieta.com, puede insertarse un <img> junto a .brand -->
+<header class="app-header">
+  <span class="brand">mrarrieta.com</span>
+  <span class="activity-name">The Alphabet</span>
+</header>
+
+<main>
+
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <span class="progress-label" id="progress-label">1 / 16</span>
+  </div>
+
+  <section class="screen active" id="game-screen">
+    <div class="question-card">
+      <span class="question-eyebrow" id="question-eyebrow">Alphabet sequence</span>
+      <p class="question-prompt" id="question-prompt"></p>
+    </div>
+
+    <div class="options-grid" id="options-grid" role="group" aria-label="Opciones de respuesta"></div>
+
+    <div class="feedback-bar" id="feedback-bar">
+      <span id="feedback-text"></span>
+      <button type="button" class="next-btn" id="next-btn">Next →</button>
+    </div>
+  </section>
+
+  <section class="screen" id="final-screen">
+    <button type="button" class="try-again-btn" id="try-again-btn">TRY AGAIN</button>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- Base content ----------
+  const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+  const WORDS = [
+    "FOOTBALL","ARCHITECT","WEATHER","GRANDMOTHER","NEW ZEALAND","LAWYER",
+    "NEWSPAPER","LANGUAGE","RESERVATION","NEIGHBOUR","EXPERIENCE","BREAKFAST",
+    "QUESTION","WASHING MACHINE","UNIVERSITY","STRAWBERRY","MUSEUM","ONIONS",
+    "BASKETBALL","CINEMA"
+  ];
+
+  const ROUND_SIZE = 16;
+
+  // ---------- Helpers ----------
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function pickDistractors(pool, correct, count){
+    const filtered = shuffle(pool.filter(item => item !== correct));
+    return filtered.slice(0, count);
+  }
+
+  // ---------- Build the full question pool ----------
+  function buildPool(){
+    const pool = [];
+
+    ALPHABET.forEach((letter, i) => {
+      if(i < ALPHABET.length - 1){
+        const correct = ALPHABET[i + 1];
+        pool.push({
+          eyebrow:"Alphabet sequence",
+          main:'Which letter comes right after "' + letter + '"?',
+          correct: correct,
+          optionsPool: ALPHABET
+        });
+      }
+      if(i > 0){
+        const correct = ALPHABET[i - 1];
+        pool.push({
+          eyebrow:"Alphabet sequence",
+          main:'Which letter comes right before "' + letter + '"?',
+          correct: correct,
+          optionsPool: ALPHABET
+        });
+      }
+
+      const lower = letter.toLowerCase();
+      pool.push({
+        eyebrow:"Uppercase & lowercase",
+        main:'What is the lowercase form of "' + letter + '"?',
+        correct: lower,
+        optionsPool: ALPHABET.map(l => l.toLowerCase())
+      });
+      pool.push({
+        eyebrow:"Uppercase & lowercase",
+        main:'What is the uppercase form of "' + lower + '"?',
+        correct: letter,
+        optionsPool: ALPHABET
+      });
+    });
+
+    WORDS.forEach(word => {
+      const clean = word.replace(/\s+/g, "");
+      const correct = clean.charAt(0);
+      pool.push({
+        eyebrow:"First letter",
+        main:'Which letter does "' + word + '" start with?',
+        correct: correct,
+        optionsPool: ALPHABET
+      });
+    });
+
+    return pool;
+  }
+
+  const QUESTION_POOL = buildPool();
+
+  // ---------- State ----------
+  let round = [];
+  let currentIndex = 0;
+  let answered = false;
+
+  // ---------- DOM refs ----------
+  const gameScreen = document.getElementById("game-screen");
+  const finalScreen = document.getElementById("final-screen");
+  const progressFill = document.getElementById("progress-fill");
+  const progressLabel = document.getElementById("progress-label");
+  const eyebrowEl = document.getElementById("question-eyebrow");
+  const promptEl = document.getElementById("question-prompt");
+  const optionsGrid = document.getElementById("options-grid");
+  const feedbackBar = document.getElementById("feedback-bar");
+  const feedbackText = document.getElementById("feedback-text");
+  const nextBtn = document.getElementById("next-btn");
+  const tryAgainBtn = document.getElementById("try-again-btn");
+
+  // ---------- Round building ----------
+  function buildRound(){
+    const seen = new Set();
+    const chosen = [];
+    const shuffledPool = shuffle(QUESTION_POOL);
+
+    for(let i = 0; i < shuffledPool.length && chosen.length < ROUND_SIZE; i++){
+      const item = shuffledPool[i];
+      if(seen.has(item.main)) continue;
+      seen.add(item.main);
+
+      const distractors = pickDistractors(item.optionsPool, item.correct, 3);
+      const options = shuffle([item.correct].concat(distractors));
+
+      chosen.push({
+        eyebrow: item.eyebrow,
+        main: item.main,
+        correct: item.correct,
+        options: options
+      });
+    }
+
+    return chosen;
+  }
+
+  function updateProgress(){
+    const shown = currentIndex + 1;
+    progressLabel.textContent = shown + " / " + round.length;
+    progressFill.style.width = (currentIndex / round.length * 100) + "%";
+  }
+
+  function renderQuestion(){
+    answered = false;
+    const q = round[currentIndex];
+
+    eyebrowEl.textContent = q.eyebrow;
+    promptEl.textContent = q.main;
+
+    optionsGrid.innerHTML = "";
+    q.options.forEach(optionText => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "option-btn";
+      btn.textContent = optionText;
+      btn.addEventListener("click", () => handleAnswer(btn, optionText, q.correct));
+      optionsGrid.appendChild(btn);
+    });
+
+    feedbackBar.classList.remove("show", "correct", "incorrect");
+    feedbackText.textContent = "";
+
+    updateProgress();
+  }
+
+  function handleAnswer(button, chosen, correct){
+    if(answered) return;
+    answered = true;
+
+    const allButtons = optionsGrid.querySelectorAll(".option-btn");
+    allButtons.forEach(b => b.disabled = true);
+
+    if(chosen === correct){
+      button.classList.add("correct");
+      feedbackBar.classList.add("show", "correct");
+      feedbackText.textContent = "Correct!";
+    } else {
+      button.classList.add("incorrect");
+      feedbackBar.classList.add("show", "incorrect");
+      feedbackText.textContent = "Incorrect. The correct answer is: " + correct;
+      allButtons.forEach(b => {
+        if(b.textContent === correct){
+          b.classList.add("reveal-correct");
+        }
+      });
+    }
+
+    progressFill.style.width = ((currentIndex + 1) / round.length * 100) + "%";
+  }
+
+  function goNext(){
+    if(!answered) return;
+    currentIndex++;
+    if(currentIndex >= round.length){
+      showFinalScreen();
+    } else {
+      renderQuestion();
+    }
+  }
+
+  function showFinalScreen(){
+    gameScreen.classList.remove("active");
+    finalScreen.classList.add("active");
+  }
+
+  function startActivity(){
+    round = buildRound();
+    currentIndex = 0;
+    finalScreen.classList.remove("active");
+    gameScreen.classList.add("active");
+    renderQuestion();
+  }
+
+  // ---------- Events ----------
+  nextBtn.addEventListener("click", goNext);
+  tryAgainBtn.addEventListener("click", startActivity);
+
+  // ---------- Init ----------
+  startActivity();
+})();
+</script>
+
+</body>
+</html>
